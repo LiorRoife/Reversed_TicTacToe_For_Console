@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ using Ex02.ConsoleUtils;
 
 namespace Reversed_TicTacToe_For_Console
 {
-   public class GameLogics
+    public class GameLogics
     {
         private const int k_MinimumSizeOfBoard = 3;
         private const int k_MaximumSizeOfBoard = 9;
@@ -16,9 +16,10 @@ namespace Reversed_TicTacToe_For_Console
         public const char k_PlayerTwoSymbol = 'O';
         private Player m_PlayerOne;
         private Player m_PlayerTwo;
-        private GameBoard m_CurrentGameBoard;
+        public GameBoard m_CurrentGameBoard;
         private readonly bool r_IsPlayerVsAI;
-        private int m_PlayerTurn;
+        public int m_PlayerTurn;
+    
         public GameLogics(int i_BoardSize, bool i_IsPlayerVsAI)
         {
             m_PlayerOne = new Player(k_PlayerOneSymbol);
@@ -28,17 +29,125 @@ namespace Reversed_TicTacToe_For_Console
             m_PlayerTurn = 1;
         }
 
-        public static bool CheckGameBoardSize(int i_BoardSize)
+        public static bool CheckBoardSizeValidity(string i_InputStringFromUser)
         {
-            bool isTheSizeValid = false;
-            if (i_BoardSize >= k_MinimumSizeOfBoard && i_BoardSize <= k_MaximumSizeOfBoard)
+            bool isValidInput = false;
+
+            if (i_InputStringFromUser.All(char.IsDigit) == true)
             {
-                isTheSizeValid = true;
+                if (int.Parse(i_InputStringFromUser) < k_MinimumSizeOfBoard || int.Parse(i_InputStringFromUser) > k_MaximumSizeOfBoard)
+                {
+                    isValidInput = false;
+                }
+                else
+                {
+                    isValidInput = true;
+                }
+            }
+            else
+            {
+                isValidInput = false;
             }
 
-            return isTheSizeValid;
+            return isValidInput;
         }
-        
+
+        public static bool CheckAmountOfPlayersValidity(string i_InputStringFromUser)
+        {
+            bool isValidInput = false;
+
+            if (i_InputStringFromUser.All(char.IsDigit) == true)
+            {
+                if (int.Parse(i_InputStringFromUser) > 0 && int.Parse(i_InputStringFromUser) < 3)
+                {
+                    isValidInput = true;
+                }
+                else
+                {
+                    isValidInput = false;
+                }
+            }
+            else
+            {
+                isValidInput = false;
+            }
+
+            return isValidInput;
+        }
+
+        public static bool CheckMoveValidity(string i_InputStringFromUser, GameLogics i_Game)
+        {
+            bool isValidInput = false;
+
+            if ((i_InputStringFromUser.Length == 1 && i_InputStringFromUser.Contains('Q')))
+            {
+                isValidInput = true;
+            }
+            else
+            {
+                if (i_InputStringFromUser.Length == 3 && i_InputStringFromUser[1] == ',')
+                {
+                    int convertedInputRow, convertedInputCol;
+                    string i_FirstNumber = i_InputStringFromUser.Substring(0);
+                    string i_SecondNumber = i_InputStringFromUser.Substring(2);
+
+                    if ((int.TryParse(i_FirstNumber, out convertedInputRow) == true) && (int.TryParse(i_FirstNumber, out convertedInputCol) == true))
+                    {
+                        if (CheckRowOrColumnValidity(convertedInputRow, i_Game) == true && CheckRowOrColumnValidity(convertedInputCol, i_Game))
+                        {
+                            if (i_Game.CurrentBoard.GetCellValue(convertedInputRow, convertedInputCol) == ' ')
+                            {
+                                isValidInput = true;
+                            }
+                            else
+                            {
+                                isValidInput = false;
+                            }
+                        }
+                        else
+                        {
+                            isValidInput = false;
+                        }
+                    }
+                    else
+                    {
+                        isValidInput = false;
+                    }
+                }
+                else
+                {
+                    isValidInput = false;
+                }
+            }
+
+            return isValidInput;
+        }
+
+        public static bool CheckRowOrColumnValidity(int i_InputRowOrCol, GameLogics i_Game)
+        {
+            bool isValidInput = false;
+            int boardSize = i_Game.CurrentBoard.BoardSize;
+
+            if ((i_InputRowOrCol >= 1 && i_InputRowOrCol <= boardSize))
+            {
+                isValidInput = true;
+            }
+            else
+            {
+                isValidInput = false;
+            }
+
+            return isValidInput;
+        }
+
+        public static void ExecuteValidMove(string i_ValidMove)
+        {
+            if(i_ValidMove.Equals('Q'))
+            {
+                Console.WriteLine("Player {0} has quited the game.", (int)PlayerTurn);
+
+            }
+        }
         public Player PlayerOne
         {
             get
@@ -55,11 +164,31 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
+        public GameBoard CurrentBoard
+        {
+            get
+            {
+                return m_CurrentGameBoard;
+            }
+        }
+
         public bool IsPlayerVsAI
         {
             get
             {
                 return r_IsPlayerVsAI;
+            }
+        }
+
+        public int PalyerTurn
+        {
+            get
+            {
+                return m_PlayerTurn;
+            }
+            set
+            {
+                m_PlayerTurn = value;
             }
         }
 
