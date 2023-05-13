@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ex02.ConsoleUtils;
 
 namespace Reversed_TicTacToe_For_Console
 {
@@ -10,14 +11,14 @@ namespace Reversed_TicTacToe_For_Console
     {
         private int m_AmountOfMarkedBoardCells;
         private int m_BoardSize;
-        private char[,] m_GameBoard;
+        public char[,] m_GameBoard;
 
         public GameBoard(int i_BoardSize)
         {
             m_AmountOfMarkedBoardCells = 0;
             m_BoardSize = i_BoardSize;
             m_GameBoard = new char[m_BoardSize, m_BoardSize];
-            gameBoardInitialization();
+            initGameBoard();
         }
 
         public int AmountOfMarkedBoardCells
@@ -44,7 +45,14 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
-        private void gameBoardInitialization()
+        public char[,] Matrix
+        {
+            get
+            {
+                return m_GameBoard;
+            }
+        }‏
+        private void initGameBoard()
         {
             for (int row = 0; row < m_BoardSize; row++)
             {
@@ -53,6 +61,21 @@ namespace Reversed_TicTacToe_For_Console
                     m_GameBoard[row, col] = ' ';
                 }
             }
+        }
+
+        public char GetCellValue(int i_Row, int i_Col)
+        {
+            return m_GameBoard[i_Row, i_Col];
+        }
+
+        public void CreateNewBoard()
+        {
+            AmountOfMarkedBoardCells = 0;
+            initGameBoard();
+        }
+        public void UpdateChosenCell(int i_row, int i_col, char i_PlayerSymbol)
+        {
+            m_GameBoard[i_row, i_col] = i_PlayerSymbol;
         }
     }
 }
