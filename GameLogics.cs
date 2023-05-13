@@ -10,6 +10,12 @@ namespace Reversed_TicTacToe_For_Console
 {
     public class GameLogics
     {
+        public enum ePlayerID
+        {
+            Player1Turn = 1,
+            Player2Turn = 2
+        }
+
         private const int k_MinimumSizeOfBoard = 3;
         private const int k_MaximumSizeOfBoard = 9;
         public const char k_PlayerOneSymbol = 'X';
@@ -18,17 +24,20 @@ namespace Reversed_TicTacToe_For_Console
         private Player m_PlayerTwo;
         public GameBoard m_CurrentGameBoard;
         private readonly bool r_IsPlayerVsAI;
-        public int m_PlayerTurn;
-    
+       // public int m_PlayerTurn;
+        public ePlayerID m_PlayerTurn;
+
+
         public GameLogics(int i_BoardSize, bool i_IsPlayerVsAI)
         {
             m_PlayerOne = new Player(k_PlayerOneSymbol);
             m_PlayerTwo = new Player(k_PlayerTwoSymbol);
             m_CurrentGameBoard = new GameBoard(i_BoardSize);
             r_IsPlayerVsAI = i_IsPlayerVsAI;
-            m_PlayerTurn = 1;
+            m_PlayerTurn = ePlayerID.Player1Turn;
         }
 
+        //methods
         public static bool CheckBoardSizeValidity(string i_InputStringFromUser)
         {
             bool isValidInput = false;
@@ -139,15 +148,20 @@ namespace Reversed_TicTacToe_For_Console
 
             return isValidInput;
         }
-
-        public static void ExecuteValidMove(string i_ValidMove)
+        public void SwitchPlayerTurn()
         {
-            if(i_ValidMove.Equals('Q'))
+            if (PlayerTurn == ePlayerID.Player1Turn)
             {
-                Console.WriteLine("Player {0} has quited the game.", (int)PlayerTurn);
-
+                PlayerTurn = ePlayerID.Player2Turn;
+            }
+            else
+            {
+                PlayerTurn = ePlayerID.Player1Turn;
             }
         }
+
+
+        //getters & setters
         public Player PlayerOne
         {
             get
@@ -180,7 +194,7 @@ namespace Reversed_TicTacToe_For_Console
             }
         }
 
-        public int PalyerTurn
+        public ePlayerID PlayerTurn
         {
             get
             {
