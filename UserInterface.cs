@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Ex02.ConsoleUtils;
 
@@ -29,6 +30,18 @@ namespace Reversed_TicTacToe_For_Console
 {
     public class UserInterface
     {
+        private const string k_SyntacticallyIncorrectInput = "input Syntax Error";        //Syntactically incorrect input
+        private const string k_SubstantiallyincorrectInput = "Input Out Of Range";       //Substantially incorrect input
+
+        private const string k_AskForNumberOfGuessesMsg = "Please Enter the maximal number of Guesses for the game (number between 4-10).";
+        private const string k_AskForGuesseMsg = "Please type your next guess <A B C D> or 'Q' to quit";
+        private const string k_AskIfNewGameMsg = "Would you like to start a new game? <Y/N>";
+        private const string k_NewGameSymbol = "Y";
+        private const string k_NotNewGameSymbol = "N";
+        private const string k_QuitGameSymbol = "Q";
+        private const string k_NoMoreGuessesAllowedMsg = "No more guesses allowed. You Lost.";
+        private const string k_GoodByeMsg = "Good bye!";
+        //methods
         //public GameLogics GameLogics;
         public static void Run()
         {
@@ -48,15 +61,16 @@ namespace Reversed_TicTacToe_For_Console
             {
                 Game = new GameLogics(boardSize, false);//2 players
             }
-            Game.m_CurrentGameBoard.PrintBoard();
+            PrintBoard(Game);
 
             validMove = getPlayerMoveInput(Game);
-            ExecuteValidMove(validMove);
+            ExecuteValidMove(validMove , Game);
 
             Console.WriteLine("testttttt ");
             Console.WriteLine("test ");
 
         }
+
 
         public static int GetGameBoardSizeInput()
         {
@@ -108,6 +122,119 @@ namespace Reversed_TicTacToe_For_Console
             return inputString;
         }
 
-  
+        public static void PrintBoard(GameLogics i_CurrentGame)
+        {
+            Screen.Clear();
+            StringBuilder boardBuilder = new StringBuilder();
+
+            // Print first row of numbers
+            boardBuilder.Append("  ");
+            for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
+            {
+                boardBuilder.Append($"{colNum + 1}   ");
+            }
+            boardBuilder.AppendLine();
+
+            // Print each row
+            for (int rowNum = 0; rowNum < i_CurrentGame.CurrentBoard.BoardSize; rowNum++)
+            {
+                boardBuilder.Append($"{rowNum + 1}|");
+                for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
+                {
+                    boardBuilder.Append($" {i_CurrentGame.CurrentBoard.GetCellValue(rowNum, colNum)} |");
+                }
+                boardBuilder.AppendLine();
+
+                boardBuilder.Append(" ");
+                for (int colNum = 0; colNum < ((i_CurrentGame.CurrentBoard.BoardSize) * 4) + 1; colNum++)
+                {
+                    boardBuilder.Append("=");
+                }
+                boardBuilder.AppendLine();
+            }
+            Console.WriteLine(boardBuilder.ToString());
+        }
+
+        public static void ExecuteValidMove(string i_ValidMove, GameLogics io_CurrentGame)
+        {
+            string isNewGame;
+
+            if (i_ValidMove.Equals(k_QuitGameSymbol))
+            {
+                //user {0} quited msg
+                //add 1 point to user {1}
+                //print score
+                //get input (ask if play another game) 
+                Console.WriteLine("Player {0} has quited the game.", io_CurrentGame.PlayerTurn);
+                if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.PlayerTwo.Score++;
+                }
+                else//player 2 quited
+                {
+                    io_CurrentGame.PlayerOne.Score++;
+                }
+                PrintGameResults(io_CurrentGame);
+                isNewGame = AskForAnotherRound(io_CurrentGame);
+                if (isNewGame.Equals(k_NewGameSymbol))//'Y'
+                {
+                    //empty board
+                    io_CurrentGame.CurrentBoard.CreateNewBoard();
+                    PrintBoard(io_CurrentGame);
+                    io_CurrentGame.m_PlayerTurn = GameLogics.ePlayerID.Player1Turn;
+                }
+                else// 'N'
+                {
+                    Console.WriteLine(k_GoodByeMsg);
+                    Thread.Sleep(1000);
+                    Environment.Exit(1);
+                }
+                //Make New game
+            }
+            else//valid move
+            {
+                string exportedRow = i_ValidMove.Substring(0);
+                string exportedCol = i_ValidMove.Substring(2);
+                int convertedRow = int.Parse(exportedRow);
+                int convertedCol = int.Parse(exportedCol);
+
+                if(io_CurrentGame.PlayerTurn== GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerOne.PlayerSymbol);
+                }
+                else //if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
+                {
+                    io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
+                }
+                //check if Win / Tie
+                //if yes, print results , ask game 
+                PrintGameResults(io_CurrentGame);
+                io_CurrentGame.SwitchPlayerTurn();
+
+
+                // if endGame AskForAnotherRound(io_CurrentGame);
+
+            }
+        }
+
+        public static void PrintGameResults(GameLogics i_CurrentGame)
+        {
+            Console.WriteLine($"Game Results:{ Environment.NewLine}");
+            Console.WriteLine("Player One Score: {0} , Player Two Score: {1}.", i_CurrentGame.PlayerOne.Score, i_CurrentGame.PlayerTwo.Score);
+        }
+
+        public static string AskForAnotherRound(GameLogics i_CurrentGame)
+        {
+            string validInputString;
+
+            Console.WriteLine("If you want to play another round press {0}, else press {1}.",k_NewGameSymbol , k_NotNewGameSymbol);
+            validInputString = Console.ReadLine();
+            while (!(validInputString.Equals(k_NewGameSymbol) || validInputString.Equals(k_NotNewGameSymbol)))
+            {
+                Console.WriteLine("Invalid input, please enter {0} for new game or {1} to exit.", k_NewGameSymbol, k_NotNewGameSymbol);
+                validInputString = Console.ReadLine();
+            }
+            return validInputString;
+        }
     }
 }
