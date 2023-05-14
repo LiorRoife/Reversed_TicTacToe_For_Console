@@ -52,6 +52,13 @@ namespace Reversed_TicTacToe_For_Console
                 return m_GameBoard;
             }
         }
+
+        public void CreateNewBoard()
+        {
+            AmountOfMarkedBoardCells = 0;
+            initGameBoard();
+        }
+
         private void initGameBoard()
         {
             for (int row = 0; row < m_BoardSize; row++)
@@ -68,14 +75,9 @@ namespace Reversed_TicTacToe_For_Console
             return m_GameBoard[i_Row, i_Col];
         }
 
-        public void CreateNewBoard()
-        {
-            AmountOfMarkedBoardCells = 0;
-            initGameBoard();
-        }
         public void UpdateChosenCell(int i_row, int i_col, char i_PlayerSymbol)
         {
-            m_GameBoard[i_row-1, i_col-1] = i_PlayerSymbol;
+            m_GameBoard[i_row - 1, i_col - 1] = i_PlayerSymbol;
         }
     }
 }
