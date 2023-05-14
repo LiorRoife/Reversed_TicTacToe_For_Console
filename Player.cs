@@ -11,7 +11,6 @@ namespace Reversed_TicTacToe_For_Console
     public class Player
     {
         private readonly char m_PlayerSymbol;
-        //private readonly string m_PlayerName;
         private int m_Score;
 
         public Player(char i_PlayerSymbol)
