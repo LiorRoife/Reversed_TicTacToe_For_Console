@@ -51,7 +51,7 @@ namespace Reversed_TicTacToe_For_Console
             {
                 return m_GameBoard;
             }
-        }‏
+        }
         private void initGameBoard()
         {
             for (int row = 0; row < m_BoardSize; row++)
@@ -75,7 +75,7 @@ namespace Reversed_TicTacToe_For_Console
         }
         public void UpdateChosenCell(int i_row, int i_col, char i_PlayerSymbol)
         {
-            m_GameBoard[i_row, i_col] = i_PlayerSymbol;
+            m_GameBoard[i_row-1, i_col-1] = i_PlayerSymbol;
         }
     }
 }
