@@ -31,18 +31,22 @@ namespace Reversed_TicTacToe_For_Console
     public class UserInterface
     {
         private const string k_WelcomeMsg = "Welcome to Tic-Tac-Toe!";
-        private const string k_BoardFullMsg = "The board is full, there is a TIE";
-        private const string k_SyntacticallyIncorrectInput = "input Syntax Error";        //Syntactically incorrect input
-        private const string k_SubstantiallyincorrectInput = "Input Out Of Range";       //Substantially incorrect input
-
-        private const string k_AskForNumberOfGuessesMsg = "Please Enter the maximal number of Guesses for the game (number between 4-10).";
-        private const string k_AskForGuesseMsg = "Please type your next move row,col or 'Q' to quit";
+        private const string k_BoardFullMsg = "The board is full, there is a TIE.";
+        private const string k_IvalidMoveMsg = "Invalid move input, please make sure you choose empty cell or 'Q' to quit.";
+        private const string k_InvalidAmountOfPlayersMsg = "Invalid input, please enter a number between 1 to 2.";
+        private const string k_AskForAmountOfPlayersMsg = "Please enter the amount of players (1 for Palyer VS Computer, 2 for Player VS Player):";
+        private const string k_AskForBoardSizeMsg = "Please enter the size of the game board (the board is square shaped and its' size must be between 3 to 9):";
+        private const string k_InvalidBoardSizeMsg = "Invalid input, please enter a number between 3 to 9.";
+       
+        private const string k_AskForGuesseMsg = "Please type your next move row,col or 'Q' to quit.";
+       
         private const string k_AskIfNewGameMsg = "Would you like to start a new game? <Y/N>";
+        
         private const string k_NewGameSymbol = "Y";
         private const string k_NotNewGameSymbol = "N";
         private const string k_QuitGameSymbol = "Q";
-       // private const string k_NoMoreGuessesAllowedMsg = "No more guesses allowed. You Lost.";
         private const string k_GoodByeMsg = "Good bye!";
+        
         //methods
         //public GameLogics GameLogics;
         public static void Run()
@@ -54,6 +58,7 @@ namespace Reversed_TicTacToe_For_Console
             bool isPlayerWon = false;
             int NumOfPlayer = 0;
             bool isEndGame = false;
+            string isNewGame;
 
             Console.WriteLine(k_WelcomeMsg);
             boardSize = GetGameBoardSizeInput();
@@ -68,16 +73,14 @@ namespace Reversed_TicTacToe_For_Console
             }
             PrintBoard(Game);//empty board
 
-            while (isEndGame==false)//run game until game ends
+            while (isEndGame == false)//run game until game ends
             {
                 validMove = getPlayerMoveInput(Game);
                 ExecuteValidMove(validMove, Game);
-
                 //check if Win / Tie
                 isPlayerWon = Game.CheckWinner(ref NumOfPlayer);
                 if (isPlayerWon == true)
                 {
-               //     PrintBoard(Game);
                     Console.WriteLine("Congratulations Player {0} you are the winner", NumOfPlayer);
                     PrintGameResults(Game);
                     isEndGame = true;
@@ -91,42 +94,32 @@ namespace Reversed_TicTacToe_For_Console
                         isEndGame = true;
                     }
                 }
-                if(isEndGame==false)
+                if (isEndGame == false)
                 {
-                   // Screen.Clear();
-                    //PrintBoard(Game);
                     Game.SwitchPlayerTurn();
                 }
-
-                //Console.WriteLine("test");
+                else
+                {
+                    isNewGame = AskForAnotherRound(Game);
+                    if (isNewGame.Equals(k_NewGameSymbol))//'Y'
+                    {
+                        //empty board
+                        Game.CurrentBoard.CreateNewBoard();
+                        PrintBoard(Game);
+                        Game.m_PlayerTurn = GameLogics.ePlayerID.Player1Turn;
+                    }
+                    else// 'N'
+                    {
+                        Console.WriteLine(k_GoodByeMsg);
+                        Thread.Sleep(1000);
+                        Environment.Exit(1);
+                    }
+                    isEndGame = false;
+                }
             }
 
-           // PrintBoard(Game);//print board after updating move
-
-            /*
-
-            //if yes, print results , ask game 
-            io_CurrentGame.SwitchPlayerTurn();
-
-            // if endGame AskForAnotherRound(io_CurrentGame);
-            Console.WriteLine(k_AskIfNewGameMsg);
-            isNewGame = Console.ReadLine();
-            if (string.Compare(isNewGame, k_NewGameSymbol) == 0)
-            {
-                io_CurrentGame.CurrentBoard.CreateNewBoard();
-                PrintBoard(io_CurrentGame);
-                io_CurrentGame.PlayerTurn = GameLogics.ePlayerID.Player1Turn;
-            }
-
-            else if (string.Compare(isNewGame, k_NotNewGameSymbol) == 0)
-            {
-                Console.WriteLine(k_GoodByeMsg);
-                Environment.Exit(1);
-            }
-
-    */
-            Console.WriteLine("testttttt ");
-            Console.WriteLine("test ");
+            // Console.WriteLine("testttttt ");
+            // Console.WriteLine("test ");
         }
 
         public static int GetGameBoardSizeInput()
@@ -134,11 +127,12 @@ namespace Reversed_TicTacToe_For_Console
             int userInputBoardSize = 0;
             string inputString;
 
-            Console.WriteLine("Please enter the size of the game board (the board is square shaped and its' size must be between 3 to 9):");
+            Console.WriteLine(k_AskForBoardSizeMsg);
             inputString = Console.ReadLine();
+
             while (GameLogics.CheckBoardSizeValidity(inputString) != true)
             {
-                Console.WriteLine("Invalid input, please enter a number between 3 to 9");
+                Console.WriteLine(k_InvalidBoardSizeMsg);
                 inputString = Console.ReadLine();
             }
             userInputBoardSize = int.Parse(inputString);
@@ -151,14 +145,15 @@ namespace Reversed_TicTacToe_For_Console
             int userInputAmountPlayers = 0;
             string inputString;
 
-            Console.WriteLine("Please enter the amount of players (1 for Palyer VS Computer , 2 for Player VS Player:");
+            Console.WriteLine(k_AskForAmountOfPlayersMsg);
             inputString = Console.ReadLine();
             while (GameLogics.CheckAmountOfPlayersValidity(inputString) != true)
             {
-                Console.WriteLine("Invalid input, please enter a number between 1 to 2");
+                Console.WriteLine(k_InvalidAmountOfPlayersMsg);
                 inputString = Console.ReadLine();
             }
             userInputAmountPlayers = int.Parse(inputString);
+
             return userInputAmountPlayers;
         }
 
@@ -171,11 +166,10 @@ namespace Reversed_TicTacToe_For_Console
 
             while (GameLogics.CheckMoveValidity(inputString, io_CurrentGame) != true)
             {
-                Console.WriteLine("Invalid move input, please make sure you choose empty cell or 'Q' to quit.");
+                Console.WriteLine(k_IvalidMoveMsg);
                 inputString = Console.ReadLine();
             }
-            // if player press q so go to EndGame
-            // getPlayerMove(io_CurrentGame);
+
             return inputString;
         }
 
@@ -188,7 +182,7 @@ namespace Reversed_TicTacToe_For_Console
             boardBuilder.Append("  ");
             for (int colNum = 0; colNum < i_CurrentGame.CurrentBoard.BoardSize; colNum++)
             {
-                boardBuilder.Append($"{colNum + 1}   ");
+                boardBuilder.Append($" {colNum + 1}  ");
             }
             boardBuilder.AppendLine();
 
@@ -218,11 +212,7 @@ namespace Reversed_TicTacToe_For_Console
 
             if (i_ValidMove.Equals(k_QuitGameSymbol))
             {
-                //user {0} quited msg
-                //add 1 point to user {1}
-                //print score
-                //get input (ask if play another game) 
-                Console.WriteLine("Player {0} has quited the game.", io_CurrentGame.PlayerTurn);
+                Console.WriteLine("Player {0} has quited the game.", io_CurrentGame.GetCurrentPlayerTurn());
                 if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
                 {
                     io_CurrentGame.PlayerTwo.Score++;
@@ -246,12 +236,11 @@ namespace Reversed_TicTacToe_For_Console
                     Thread.Sleep(1000);
                     Environment.Exit(1);
                 }
-                //Make New game
             }
             else//valid move
             {
-                string exportedRow = i_ValidMove.Substring(0,1);
-                string exportedCol = i_ValidMove.Substring(2,1);
+                string exportedRow = i_ValidMove.Substring(0, 1);
+                string exportedCol = i_ValidMove.Substring(2, 1);
                 int convertedRow = int.Parse(exportedRow);
                 int convertedCol = int.Parse(exportedCol);
 
@@ -263,44 +252,6 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
                 }
-                /*
-                                PrintBoard(io_CurrentGame);//print board after updating move
-
-                                //check if Win / Tie
-                                bool isPlayerWon = io_CurrentGame.CheckWinner(ref NumOfPlayer);
-                                if (isPlayerWon == true)
-                                {
-                                    Console.WriteLine("Congratulations Player {0} you are the winner", NumOfPlayer);
-                                    PrintGameResults(io_CurrentGame);
-                                }
-                                else
-                                {
-                                    if (io_CurrentGame.CheckIfDraw() == true)
-                                    {
-                                        Console.WriteLine("The board is full , you are in a TIE");
-                                        PrintGameResults(io_CurrentGame);
-                                    }
-                                }
-
-
-                                //if yes, print results , ask game 
-                                io_CurrentGame.SwitchPlayerTurn();
-                                // if endGame AskForAnotherRound(io_CurrentGame);
-                                Console.WriteLine(k_AskIfNewGameMsg);
-                                isNewGame = Console.ReadLine();
-                                if (string.Compare(isNewGame, k_NewGameSymbol) == 0)
-                                {
-                                    io_CurrentGame.CurrentBoard.CreateNewBoard();
-                                    PrintBoard(io_CurrentGame);
-                                    io_CurrentGame.PlayerTurn = GameLogics.ePlayerID.Player1Turn;
-                                }
-
-                                else if (string.Compare(isNewGame, k_NotNewGameSymbol) == 0)
-                                {
-                                    Console.WriteLine(k_GoodByeMsg);
-                                    Environment.Exit(1);
-                                }
-                */
                 PrintBoard(io_CurrentGame);
             }
         }
@@ -322,6 +273,7 @@ namespace Reversed_TicTacToe_For_Console
                 Console.WriteLine("Invalid input, please enter {0} for new game or {1} to exit.", k_NewGameSymbol, k_NotNewGameSymbol);
                 validInputString = Console.ReadLine();
             }
+
             return validInputString;
         }
     }
