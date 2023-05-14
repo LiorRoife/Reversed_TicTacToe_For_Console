@@ -94,7 +94,7 @@ namespace Reversed_TicTacToe_For_Console
                     string i_FirstNumber = i_InputStringFromUser.Substring(0,1);
                     string i_SecondNumber = i_InputStringFromUser.Substring(2,1);
 
-                    if ((int.TryParse(i_FirstNumber, out convertedInputRow) == true) && (int.TryParse(i_FirstNumber, out convertedInputCol) == true))
+                    if ((int.TryParse(i_FirstNumber, out convertedInputRow) == true) && (int.TryParse(i_SecondNumber, out convertedInputCol) == true))
                     {
                         if (CheckRowOrColumnValidity(convertedInputRow, i_Game) == true && CheckRowOrColumnValidity(convertedInputCol, i_Game))
                         {
@@ -340,14 +340,6 @@ namespace Reversed_TicTacToe_For_Console
 
             return isValidInput;
         }
-        //(IsTie)
-
-        //IsEndGame:
-        //(Tie or Win Or Q)
-
-        //UpdateBoardAfterTurn
-
-        //IncreaseWinnerScore
 
         public void SwitchPlayerTurn()
         {
