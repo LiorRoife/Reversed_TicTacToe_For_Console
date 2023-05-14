@@ -212,6 +212,7 @@ namespace Reversed_TicTacToe_For_Console
 
             if (i_ValidMove.Equals(k_QuitGameSymbol))
             {
+                PrintBoard(io_CurrentGame);
                 Console.WriteLine("Player {0} has quited the game.", io_CurrentGame.GetCurrentPlayerTurn());
                 if (io_CurrentGame.PlayerTurn == GameLogics.ePlayerID.Player1Turn)
                 {
