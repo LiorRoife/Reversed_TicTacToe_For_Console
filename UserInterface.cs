@@ -30,6 +30,8 @@ namespace Reversed_TicTacToe_For_Console
 {
     public class UserInterface
     {
+        private const string k_WelcomeMsg = "Welcome to Tic-Tac-Toe!";
+        private const string k_BoardFullMsg = "The board is full, there is a TIE";
         private const string k_SyntacticallyIncorrectInput = "input Syntax Error";        //Syntactically incorrect input
         private const string k_SubstantiallyincorrectInput = "Input Out Of Range";       //Substantially incorrect input
 
@@ -53,7 +55,7 @@ namespace Reversed_TicTacToe_For_Console
             int NumOfPlayer = 0;
             bool isEndGame = false;
 
-            Console.WriteLine("Welcome to Tic-Tac-Toe!");
+            Console.WriteLine(k_WelcomeMsg);
             boardSize = GetGameBoardSizeInput();
             amountOfPlayers = GetAmountOfPlayers();
             if (amountOfPlayers == 1)
@@ -75,6 +77,7 @@ namespace Reversed_TicTacToe_For_Console
                 isPlayerWon = Game.CheckWinner(ref NumOfPlayer);
                 if (isPlayerWon == true)
                 {
+               //     PrintBoard(Game);
                     Console.WriteLine("Congratulations Player {0} you are the winner", NumOfPlayer);
                     PrintGameResults(Game);
                     isEndGame = true;
@@ -83,22 +86,22 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     if (Game.CheckIfDraw() == true)
                     {
-                        Console.WriteLine("The board is full , you are in a TIE");
+                        Console.WriteLine(k_BoardFullMsg);
                         PrintGameResults(Game);
                         isEndGame = true;
                     }
                 }
                 if(isEndGame==false)
                 {
-                    Screen.Clear();
-                    PrintBoard(Game);
+                   // Screen.Clear();
+                    //PrintBoard(Game);
                     Game.SwitchPlayerTurn();
                 }
 
-
+                //Console.WriteLine("test");
             }
 
-            PrintBoard(Game);//print board after updating move
+           // PrintBoard(Game);//print board after updating move
 
             /*
 
@@ -212,7 +215,6 @@ namespace Reversed_TicTacToe_For_Console
         public static void ExecuteValidMove(string i_ValidMove, GameLogics io_CurrentGame)
         {
             string isNewGame;
-            int NumOfPlayer = 0;
 
             if (i_ValidMove.Equals(k_QuitGameSymbol))
             {
@@ -261,44 +263,45 @@ namespace Reversed_TicTacToe_For_Console
                 {
                     io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
                 }
-/*
-                PrintBoard(io_CurrentGame);//print board after updating move
+                /*
+                                PrintBoard(io_CurrentGame);//print board after updating move
 
-                //check if Win / Tie
-                bool isPlayerWon = io_CurrentGame.CheckWinner(ref NumOfPlayer);
-                if (isPlayerWon == true)
-                {
-                    Console.WriteLine("Congratulations Player {0} you are the winner", NumOfPlayer);
-                    PrintGameResults(io_CurrentGame);
-                }
-                else
-                {
-                    if (io_CurrentGame.CheckIfDraw() == true)
-                    {
-                        Console.WriteLine("The board is full , you are in a TIE");
-                        PrintGameResults(io_CurrentGame);
-                    }
-                }
+                                //check if Win / Tie
+                                bool isPlayerWon = io_CurrentGame.CheckWinner(ref NumOfPlayer);
+                                if (isPlayerWon == true)
+                                {
+                                    Console.WriteLine("Congratulations Player {0} you are the winner", NumOfPlayer);
+                                    PrintGameResults(io_CurrentGame);
+                                }
+                                else
+                                {
+                                    if (io_CurrentGame.CheckIfDraw() == true)
+                                    {
+                                        Console.WriteLine("The board is full , you are in a TIE");
+                                        PrintGameResults(io_CurrentGame);
+                                    }
+                                }
 
 
-                //if yes, print results , ask game 
-                io_CurrentGame.SwitchPlayerTurn();
-                // if endGame AskForAnotherRound(io_CurrentGame);
-                Console.WriteLine(k_AskIfNewGameMsg);
-                isNewGame = Console.ReadLine();
-                if (string.Compare(isNewGame, k_NewGameSymbol) == 0)
-                {
-                    io_CurrentGame.CurrentBoard.CreateNewBoard();
-                    PrintBoard(io_CurrentGame);
-                    io_CurrentGame.PlayerTurn = GameLogics.ePlayerID.Player1Turn;
-                }
+                                //if yes, print results , ask game 
+                                io_CurrentGame.SwitchPlayerTurn();
+                                // if endGame AskForAnotherRound(io_CurrentGame);
+                                Console.WriteLine(k_AskIfNewGameMsg);
+                                isNewGame = Console.ReadLine();
+                                if (string.Compare(isNewGame, k_NewGameSymbol) == 0)
+                                {
+                                    io_CurrentGame.CurrentBoard.CreateNewBoard();
+                                    PrintBoard(io_CurrentGame);
+                                    io_CurrentGame.PlayerTurn = GameLogics.ePlayerID.Player1Turn;
+                                }
 
-                else if (string.Compare(isNewGame, k_NotNewGameSymbol) == 0)
-                {
-                    Console.WriteLine(k_GoodByeMsg);
-                    Environment.Exit(1);
-                }
-*/
+                                else if (string.Compare(isNewGame, k_NotNewGameSymbol) == 0)
+                                {
+                                    Console.WriteLine(k_GoodByeMsg);
+                                    Environment.Exit(1);
+                                }
+                */
+                PrintBoard(io_CurrentGame);
             }
         }
 
