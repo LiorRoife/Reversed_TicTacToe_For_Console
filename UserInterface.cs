@@ -23,7 +23,6 @@ namespace Reversed_TicTacToe_For_Console
         private const string k_QuitGameSymbol = "Q";
         private const string k_GoodByeMsg = "Good bye!";
 
-        //methods
         public static void Run()
         {
             GameLogics Game;
@@ -206,6 +205,7 @@ namespace Reversed_TicTacToe_For_Console
                     io_CurrentGame.CurrentBoard.UpdateChosenCell(convertedRow, convertedCol, io_CurrentGame.PlayerTwo.PlayerSymbol);
                 }
 
+                io_CurrentGame.CurrentBoard.AmountOfMarkedBoardCells++;
                 printBoard(io_CurrentGame);
             }
         }
